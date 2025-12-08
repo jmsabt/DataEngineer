@@ -30,3 +30,26 @@ SELECT p.name, oi.quantity
             FROM order_items oi
             JOIN products p ON oi.product_id = p.id
             WHERE oi.order_id = 1;
+
+/*Find all customers who have not yet placed an order.*/            
+SELECT c.first_name, c.last_name
+            FROM customers c
+            LEFT JOIN orders o ON c.id = o.customer_id
+            WHERE o.id IS NULL;
+            
+/*Find customers who purchased product 2.*/
+SELECT DISTINCT c.first_name, c.last_name FROM customers c JOIN orders o ON c.id = o.customer_id JOIN order_items oi ON o.id = oi.order_id WHERE oi.product_id = 2;
+
+/*Find customers with at least 2 orders.*/
+SELECT
+c.first_name,
+c.last_name,
+COUNT(o.id) as order_count
+FROM customers as C
+JOIN orders as O
+ON c.id = o.customer_id
+GROUP BY 
+c.first_name,
+c.last_name
+HAVING 
+COUNT(o.id) >= 2
