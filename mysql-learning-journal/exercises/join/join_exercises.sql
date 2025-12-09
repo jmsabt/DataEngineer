@@ -53,3 +53,35 @@ c.first_name,
 c.last_name
 HAVING 
 COUNT(o.id) >= 2
+
+/*Compute the average value of all orders.*/
+SELECT
+AVG(order_total) AS avg_order_value
+FROM (
+
+SELECT SUM(oi.quantity*oi.price_per_unit) as order_total 
+FROM orders AS o
+JOIN order_items as oi
+ON o.id = oi.order_id
+GROUP BY o.id
+) AS order_totals
+
+
+/*Retrieve the first order date for every customer.*/
+SELECT c.first_name,
+c.last_name,
+o.first_order
+FROM customers AS c
+JOIN (
+SELECT customer_id, MIN(order_date) AS first_order FROM orders GROUP BY customer_id
+) AS o
+on c.id = o.customer_id
+
+/*Count how many orders were placed each month in 2023.*/
+SELECT
+    MONTH(order_date) AS month,
+    COUNT(*) AS orders_in_month
+FROM orders
+WHERE YEAR(order_date) = 2023
+GROUP BY MONTH(order_date)
+ORDER BY month;
