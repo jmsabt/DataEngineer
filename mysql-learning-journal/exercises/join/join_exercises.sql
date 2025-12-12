@@ -85,3 +85,32 @@ FROM orders
 WHERE YEAR(order_date) = 2023
 GROUP BY MONTH(order_date)
 ORDER BY month;
+
+/*List customers who have ordered products in the Electronics category.*/
+SELECT DISTINCT c.first_name, c.last_name 
+FROM customers c
+JOIN orders o
+on c.id = o.customer_id
+JOIN order_items oi
+on o.id = oi.order_id
+JOIN products p
+on oi.product_id = p.id
+WHERE p.category = "Electronics"
+
+/*Find orders that include more than three items in total.*/
+SELECT
+order_id,
+SUM(quantity) total_items
+FROM order_items
+WHERE quantity > 3
+GROUP BY order_id
+
+/*Calculate how much customer 5 has spent across all orders.*/
+SELECT SUM(oi.quantity*oi.price_per_unit) total_spent
+FROM customers c
+JOIN orders o
+ON c.id = o.customer_id
+JOIN order_items oi
+ON o.id = oi.order_id
+WHERE c.id = 5
+GROUP BY c.id
