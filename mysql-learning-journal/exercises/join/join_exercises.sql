@@ -114,3 +114,18 @@ JOIN order_items oi
 ON o.id = oi.order_id
 WHERE c.id = 5
 GROUP BY c.id
+
+/*List customers who placed orders during April 2023.*/
+SELECT c.first_name, c.last_name 
+FROM customers c
+JOIN orders o
+on c.id = o.customer_id
+WHERE o.order_date BETWEEN '2023-04-01' AND '2023-04-31'
+
+/**/
+SELECT c.first_name, c.last_name FROM customers c JOIN orders o ON c.id = o.customer_id JOIN order_items oi ON o.id = oi.order_id JOIN products p on oi.product_id = p.id WHERE p.name = 'Laptop Pro 15"'
+
+/*List all products that have never been included in any order.*/
+SELECT DISTINCT p.name FROM products p 
+LEFT JOIN order_items oi ON oi.product_id = p.id
+WHERE oi.product_id IS NULL
